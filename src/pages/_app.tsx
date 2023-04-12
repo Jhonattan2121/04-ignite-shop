@@ -19,7 +19,7 @@ export default function App({Component , pageProps}: AppProps) {
 
       </Header>
 
-      return <Component {...pageProps} />
+    <Component {...pageProps} />
     </Container>
   )
 }
