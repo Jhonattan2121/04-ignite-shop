@@ -13,7 +13,7 @@ interface HomeProps {
     id: string
     name: string
     imageUrl: string
-    price: number
+    price: string
   }[]
 }
 
@@ -65,6 +65,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       products,
     },
-    revalidate: 60 * 60 * 24,
+    revalidate: 60 * 60 * 1,
   }
 }
