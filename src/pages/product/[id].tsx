@@ -4,8 +4,9 @@ import {
   ProductContainer,
   ProductDetails,
 } from '@/src/styles/pages/product'
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
+import {  GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
+
 
 import Stripe from 'stripe'
 
@@ -20,6 +21,7 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  
   return (
     <ProductContainer>
       <ImageContainer>
@@ -40,25 +42,21 @@ export default function Product({ product }: ProductProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [{ params: { id: 'prod_NhLj2go5s69JT0' } }],
-    fallback: false,
+    fallback: "blocking",
   }
 }
 
-export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
-  params,
-}) => {
-  const productId = params ? params.id : null
+export const getStaticProps: GetStaticProps<any, {id: string}> = async ({params}) => {
+  const productId = params.id
 
-  if (!productId) {
-    return {
-      notFound: true,
-    }
-  }
+ 
   const product = await stripe.products.retrieve(productId, {
     expand: ['default_price'],
   })
 
   const price = product.default_price as Stripe.Price
+  await new Promise(resolve => setTimeout(resolve, 2000))
+  
   return {
     props: {
       product: {
@@ -72,6 +70,6 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         description: product.description,
       },
     },
-    // revalidate: 60 * 60 * 1,
+     revalidate: 60 * 60 * 1,
   }
 }
